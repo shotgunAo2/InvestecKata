@@ -18,24 +18,36 @@ import java.time.format.DateTimeFormatter;
 public class Web_Hook {
 
     @Before
-    public void InitializeTest()
+    public void InitializeTest(Scenario s)
     {
-        BasePage.SetUp();
+
+        if (!s.getSourceTagNames().toString().equals("[@apiTest]"))
+        {
+            BasePage.SetUp();
+        }
+        else{
+            System.out.println("Api test browser not started");
+        }
     }
 
     @After
-    public void TearDownTest()
+    public void TearDownTest(Scenario s)
     {
-        BasePage.CloseBrowser();
+        if (!s.getSourceTagNames().toString().equals("[@apiTest]"))
+        {
+            BasePage.CloseBrowser();
+        }
     }
 
     @AfterStep
     public void TakeScreenShot(Scenario s) throws IOException, InterruptedException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmmss");
-        LocalDateTime dateTime = LocalDateTime.now();
-        File scr = ((TakesScreenshot) BasePage.browser).getScreenshotAs(OutputType.FILE);
-        File dest = new File(String.format(System.getProperty("user.dir")),"\\screenshots\\" + dateTime.format(formatter) +".png");
-        FileUtils.copyFile(scr, dest);
-        Thread.sleep(100);
+        if (!s.getSourceTagNames().toString().equals("[@apiTest]")) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmmss");
+            LocalDateTime dateTime = LocalDateTime.now();
+            File scr = ((TakesScreenshot) BasePage.browser).getScreenshotAs(OutputType.FILE);
+            File dest = new File(String.format(System.getProperty("user.dir")), "\\screenshots\\" + dateTime.format(formatter) + ".png");
+            FileUtils.copyFile(scr, dest);
+            Thread.sleep(100);
+        }
     }
 }

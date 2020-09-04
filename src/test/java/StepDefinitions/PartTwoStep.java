@@ -2,24 +2,37 @@ package StepDefinitions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.restassured.RestAssured;
-import io.restassured.RestAssured.*;
-import io.restassured.matcher.RestAssuredMatchers.*;
-import org.hamcrest.Matchers.*;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItems;
+import java.util.List;
+import java.util.Map;
+
+import static io.restassured.RestAssured.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PartTwoStep {
+
+    private Response response;
+
     @Given("I execute {string} api")
     public void iExecuteApi(String apiUrl) {
-        RestAssured.when().
-                get(apiUrl).
-                then().statusCode(200).body("Name", equalTo("R2-D2"),
-                "lotto.winners.winnerId", hasItems("white", "blue"));
+        response = when().get(apiUrl).then().contentType(ContentType.JSON).extract().response();
+        System.out.println("response status: "+ response.statusCode());
+        assertThat(response.getStatusCode()).as("API response code").isEqualTo(200);
     }
 
-    @Then("I can see the {string} skin colour is {string} and {string}")
-    public void iCanSeeTheSkinColourIsAnd(String arg0, String arg1, String arg2) {
+    @Then("I can see the {string} skin colour is {string}")
+    public void iCanSeeTheSkinColourIs(String expectedName, String expectedcolour) {
+        List<Map<String, String>> resultsList = response.jsonPath().getList("results");
+        for(int counter =0;counter<resultsList.size();counter++)
+        {
+            if (resultsList.get(counter).get("name").equals(expectedName))
+            {
+                System.out.println(resultsList.get(counter).get("name"));
+                System.out.println(resultsList.get(counter).get("skin_color"));
+                assertThat(resultsList.get(counter).get("skin_color")).isEqualTo(expectedcolour);
+            }
+        }
     }
 }
