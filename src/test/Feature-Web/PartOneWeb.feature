@@ -3,7 +3,6 @@
 #  So that I can maximise my investments
 
   Feature: Understanding Cash Investment Interest Rates
-    @firsttest
     Scenario: Signup for focused insights
       Given I am navigate to the Investec SA home page
        When I click on the search option

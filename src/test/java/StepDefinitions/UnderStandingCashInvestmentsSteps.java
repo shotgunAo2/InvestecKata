@@ -31,6 +31,6 @@ public class UnderStandingCashInvestmentsSteps {
     @Then("I see the Thank you message displayed")
     public void iSeeTheThankYouMessageDisplayed() {
         boolean isMessageDisplayed = underStandingCashInvestmentsPage.IsThankYouMessageDisplayed();
-        assertThat(isMessageDisplayed).isTrue().withFailMessage("Thank you message not displayed");
+        assertThat(isMessageDisplayed).isTrue();
     }
 }
