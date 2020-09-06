@@ -10,4 +10,4 @@ Investec assessment
 
 ## Install
 
-Execute maven command "mvn test"
+Execute maven command "mvn clean verify test"
